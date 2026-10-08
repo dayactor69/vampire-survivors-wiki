@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vampire Survivors Wiki - Evoluzioni e ricette</title>
+<style>
+:root{--bg:#14101c;--card:#201a2e;--ac:#c0392b;--tx:#eee;--mu:#a99fc0}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,Arial,sans-serif;background:var(--bg);color:var(--tx)}
+header{padding:20px 16px;background:#0d0a14;border-bottom:2px solid var(--ac);position:sticky;top:0;z-index:5}
+h1{margin:0 0 10px;font-size:1.3rem}
+#q{width:100%;padding:12px;font-size:1rem;border-radius:8px;border:1px solid #444;background:#2a2340;color:var(--tx)}
+.filters{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px}
+.chip{padding:5px 11px;border-radius:99px;border:1px solid #554a73;background:transparent;color:var(--mu);cursor:pointer;font-size:.85rem}
+.chip.on{background:var(--ac);border-color:var(--ac);color:#fff}
+main{max-width:900px;margin:0 auto;padding:14px}
+#count{color:var(--mu);font-size:.85rem;margin-bottom:10px}
+.card{background:var(--card);border-radius:10px;padding:12px 14px;margin-bottom:10px;border-left:4px solid var(--ac)}
+.card h3{margin:0 0 4px;font-size:1.05rem}
+.tag{display:inline-block;font-size:.72rem;padding:2px 8px;border-radius:99px;background:#3a3057;color:#d6caf5;margin-right:5px}
+.r{margin-top:6px;color:#ddd;font-size:.92rem}
+.n{margin-top:4px;color:var(--mu);font-size:.82rem}
+mark{background:#f1c40f;color:#000;border-radius:3px}
+footer{text-align:center;color:var(--mu);font-size:.78rem;padding:20px}
+a{color:#e8a0a0}
+</style>
+</head>
+<body>
+<header>
+<h1>Vampire Survivors Wiki - evoluzioni, unioni, doni e morph</h1>
+<input id="q" type="search" placeholder="Cerca un'arma, un passivo o un'evoluzione (es. Whip, Clover, Gungnir)..." autofocus>
+<div class="filters" id="fe"></div>
+<div class="filters" id="ft"></div>
+</header>
+<main>
+<div id="count"></div>
+<div id="list"></div>
+</main>
+<footer>Dati dal <a href="https://vampire.survivors.wiki/w/Evolution">Vampire Survivors Wiki</a>. Le icone arriveranno in seguito. Wiki non ufficiale.</footer>
+<script>
+// [espansione, tipo, risultato, ricetta, nota]
+var BASE="Gioco base",MS="Legacy of the Moonspell",BM="Legacy of the Bloodmoon",FO="Tides of the Foscari",EM="Emergency Meeting",OG="Operation Guns",CV="Ode to Castlevania",ED="Emerald Diorama",AC="Ante Chamber";
+var EV="Evoluzione",UN="Unione",GI="Dono",MO="Morph",GL="Glimmer";
+var D=[
+[BASE,EV,"Bloody Tear","Whip + Hollow Heart"],
+[BASE,EV,"Holy Wand","Magic Wand + Empty Tome"],
+[BASE,EV,"Thousand Edge","Knife + Bracer"],
+[BASE,EV,"Death Spiral","Axe + Candelabrador"],
+[BASE,EV,"Heaven Sword","Cross + Clover"],
+[BASE,EV,"Unholy Vespers","King Bible + Spellbinder"],
+[BASE,EV,"Hellfire","Fire Wand + Spinach"],
+[BASE,EV,"Soul Eater","Garlic + Pummarola"],
+[BASE,EV,"La Borra","Santa Water + Attractorb"],
+[BASE,EV,"NO FUTURE","Runetracer + Armor"],
+[BASE,EV,"Thunder Loop","Lightning Ring + Duplicator"],
+[BASE,EV,"Gorgeous Moon","Pentagram + Crown"],
+[BASE,EV,"Vicious Hunger","Gatti Amari + Stone Mask"],
+[BASE,EV,"Mannajja","Song of Mana + Skull O'Maniac"],
+[BASE,EV,"Valkyrie Turner","Shadow Pinion + Wings"],
+[BASE,EV,"Infinite Corridor","Clock Lancet + Silver Ring + Gold Ring (al massimo livello)"],
+[BASE,EV,"Crimson Shroud","Laurel + Metaglio Left + Metaglio Right (al massimo livello)"],
+[BASE,EV,"Bi-Bracelet","Bracelet","Non serve un passivo."],
+[BASE,EV,"Tri-Bracelet","Bi-Bracelet","Non serve un passivo."],
+[BASE,EV,"Mazo Familiar","Pako Battiliar (max) + Hollow Heart"],
+[BASE,EV,"Gunastrophe","Ammo Appalate (max) + Bracer"],
+[BASE,EV,"Spirit Disturbance","Unearthly Bolt (max) + Tirajisu"],
+[BASE,EV,"Ashes of Muspell","Flames of Misspell (max) + Torrona's Box"],
+[BASE,EV,"Celestial Voulge","Glass Fandango (max) + Wings"],
+[BASE,UN,"Vandalier","Peachone + Ebony Wings","Nessun passivo richiesto."],
+[BASE,UN,"Phieraggi","Phiera Der Tuphello + Eight The Sparrow + Tirajisu"],
+[BASE,UN,"Fuwalafuwaloo","Vento Sacro + Bloody Tear"],
+[BASE,GI,"Sole Solution","Victory Sword (max) + Torrona's Box + forziere","Il Victory Sword resta nell'inventario."],
+[BASE,GI,"Super Candybox II Turbo","Candybox (max) + passivi e evoluzioni + forziere"],
+[BASE,MO,"Anima of Mortaccio","Bone + Mortaccio + Chaos Malachite","Morph: livello 80."],
+[BASE,MO,"Yatta Daikarin","Cherry Bomb + Yatta Cavallo + Chaos Rosalia","Morph: livello 80."],
+[BASE,MO,"Carrozza!","Carrello + Bianca Ramba + Chaos Lazulia","Morph: livello 80."],
+[BASE,MO,"Profusione D'Amore","Celestial Dusting + O'Sole Meeo + Chaos Altemanna","Morph: livello 80."],
+[MS,EV,"Festive Winds","Silver Wind (max) + Pummarola"],
+[MS,EV,"Argent Flow","Festive Winds (max) + Torrona's Box"],
+[MS,EV,"Godai Shuffle","Four Seasons (max) + Candelabrador"],
+[MS,EV,"Echo Night","Summon Night (max) + Duplicator"],
+[MS,EV,"J'Odore","Mirage Robe (max) + Attractorb"],
+[MS,EV,"Muramasa","Night Sword (max) + Stone Mask"],
+[MS,EV,"Boo Roo Boolle","Mille Bolle Blu (max) + Spellbinder"],
+[MS,UN,"LunarFlight","LunarMight + LunarSight + LunarBight"],
+[BM,EV,"Cardinal Rain","Scarlet Needle (max) + Pummarola"],
+[BM,EV,"Dust to Dust","Incineration (max) + Candelabrador"],
+[BM,EV,"Bloodlust","Ashella (max) + Duplicator"],
+[BM,EV,"Forbidden Siren","Screams from the Void (max) + Attractorb"],
+[BM,EV,"Damnation","Blacken Firmament (max) + Torrona's Box"],
+[BM,UN,"FireStall","FireFall + FireBall + FireWall"],
+[BM,UN,"Shimmering Sands","Descent Into Misery + Kyra-Stones"],
+[BM,UN,"Road to Heaven","108 Bocce + 108 Responsive Prayers"],
+[FO,EV,"Legionnaire","Eskizzibur (max) + Armor"],
+[FO,EV,"Millionaire","Flash Arrow (max) + Bracer"],
+[FO,EV,"Luminaire","Prismatic Missile (max) + Crown"],
+[FO,EV,"Ophion","Shadow Servant (max) + Skull O'Maniac"],
+[FO,UN,"SpellStrom","SpellString + SpellStream + SpellStrike"],
+[EM,EV,"Emergency Meeting","Report! (max) + Mini Crewmate","Il passivo viene consumato."],
+[EM,EV,"Crossed Wires","Lucky Swipe (max) + Mini Engineer","Il passivo viene consumato."],
+[EM,EV,"Paranormal Scan","Lifesign Scan (max) + Mini Ghost","Il passivo viene consumato."],
+[EM,EV,"Unjust Ejection","Just Vent (max) + Mini Shapeshifter","Il passivo viene consumato."],
+[EM,EV,"Clear Asteroids","Clear Debris (max) + Mini Guardian","Il passivo viene consumato."],
+[EM,EV,"Impostongue","Sharp Tongue (max) + Mini Impostor","Il passivo viene consumato."],
+[EM,EV,"Rocket Science","Science Rocks (max) + Mini Scientist","Il passivo viene consumato."],
+[OG,EV,"Prototype A","Long Gun + Weapon Power-Up","Il Power-Up viene consumato."],
+[OG,EV,"Prototype B","Short Gun + Weapon Power-Up + Bracer","Il Power-Up viene consumato."],
+[OG,EV,"Prototype C","Spread Shot + Weapon Power-Up + Empty Tome","Il Power-Up viene consumato."],
+[OG,EV,"Pronto Beam","C-U-Laser + Weapon Power-Up + Tirajisu","Il Power-Up viene consumato."],
+[OG,EV,"Fire-L3GS","Firearm + Weapon Power-Up + Candelabrador","Il Power-Up viene consumato."],
+[OG,EV,"Wave Beam","Sonic Bloom + Weapon Power-Up + Armor","Il Power-Up viene consumato."],
+[OG,EV,"Multistage Missiles","Homing Miss + Weapon Power-Up + Duplicator","Il Power-Up viene consumato."],
+[OG,EV,"Atmo-Torpedo","Diver Mines + Weapon Power-Up + Attractorb","Il Power-Up viene consumato."],
+[OG,EV,"BFC2000-AD","Blade Crossbow + Weapon Power-Up + Clover","Il Power-Up viene consumato."],
+[OG,EV,"Time Warp","Prism Lass + Weapon Power-Up + Wings","Il Power-Up viene consumato."],
+[OG,EV,"Big Fuzzy Fist","Metal Claw + Weapon Power-Up + Hollow Heart","Il Power-Up viene consumato."],
+[CV,EV,"Vampire Killer","Alchemy Whip + Tirajisu"],
+[CV,EV,"Spirit Tornado Tip","Wind Whip + Crown"],
+[CV,EV,"Cross Crasher Tip","Platinum Whip + Clover"],
+[CV,EV,"Hydrostormer Tip","Dragon Water Whip + Attractorb"],
+[CV,EV,"Crissaegrim Tip","Sonic Whip + Skull O'Maniac"],
+[CV,EV,"Mormegil Tip","Jet Black Whip + Stone Mask"],
+[CV,EV,"Daybreaker Tip","Vibhuti Whip + Candelabrador"],
+[CV,EV,"Aurablaster Tip","Vanitas Whip + Hollow Heart"],
+[CV,EV,"Yagyu Shuriken","Shuriken + Empty Tome"],
+[CV,EV,"Bwaka Knife","Curved Knife + Bracer"],
+[CV,EV,"Long Inus","Javelin + Spellbinder"],
+[CV,EV,"Stellar Blade","Discus (max) + Parm Aegis"],
+[CV,EV,"Wrecking Ball","Iron Ball + Armor"],
+[CV,EV,"Jewel Gun","Silver Revolver + Karoma's Mana"],
+[CV,EV,"The RPG","Hand Grenade (max) + Candelabrador"],
+[CV,EV,"Meal Ticket","Wine Glass (max) + Tirajisu"],
+[CV,EV,"Salamender","Raging Fire (max) + Spinach"],
+[CV,EV,"Cocytus","Ice Fang (max) + Spellbinder"],
+[CV,EV,"Pneuma Tempestas","Gale Force (max) + Bracer"],
+[CV,EV,"Gemma Torpor","Rock Riot (max) + Stone Mask"],
+[CV,EV,"Tenebris Tonitrus","Fulgur (max) + Duplicator"],
+[CV,EV,"Keremet Morbus","Keremet Bubbles (max) + Armor"],
+[CV,EV,"Nightmare","Hex (max) + Skull O'Maniac"],
+[CV,EV,"Sanctuary","Refectio (max) + Clover"],
+[CV,EV,"Stamazza","Mace (max) + Hollow Heart"],
+[CV,EV,"Moon Rod","Star Flail (max) + Pummarola"],
+[CV,EV,"Thunderbolt Spear","Alucard Spear + Wings"],
+[CV,EV,"Gungnir-Souris","Trident (max) + Duplicator"],
+[CV,EV,"Dark Iron Shield","Iron Shield + Parm Aegis"],
+[CV,EV,"Sacred Beasts Tower Shield","Guardian's Targe + Pummarola"],
+[CV,EV,"Rune Sword","Tyrfing + Spinach"],
+[CV,EV,"Alucard Swords","Alucart Sworb","Non serve un passivo."],
+[CV,EV,"Vol Confodere","Confodere","Non serve un passivo."],
+[CV,EV,"Melio Confodere","Vol Confodere","Non serve un passivo."],
+[CV,EV,"Nitesco","Globus (max) + Empty Tome"],
+[CV,EV,"Acerbatus","Optical Shot (max) + Karoma's Mana"],
+[CV,EV,"Rapidus Fio","Sonic Dash (max) + Wings"],
+[CV,EV,"Vol Luminatio","Luminatio (max) + Crown"],
+[CV,EV,"Vol Umbra","Umbra (max) + Attractorb"],
+[CV,EV,"Claimh Solais","Pocket Knife (max) + Torrona's Box"],
+[CV,UN,"Trinum Custodem","Centralis Custos + Dextro Custos + Sinestro Custos"],
+[CV,UN,"Power of Sire","Dominus Agony + Dominus Anger + Dominus Hatred"],
+[CV,UN,"Million Cut","Valmanway + Thousand Edge"],
+[CV,UN,"Ninth Circle","Icebrand + Unholy Vespers"],
+[CV,UN,"Dies Irae","Arrow of Goth + Mannajja"],
+[CV,UN,"Kardia Phlegeton","Aura Blast + Hellfire"],
+[CV,UN,"Lapiste Tepisto","Kaiser Knuckle + Tri-Bracelet"],
+[CV,UN,"Darkness Illusion","Svarog Statue + Valkyrie Turner"],
+[CV,UN,"Carnage Heart","Troll Bomb + NO FUTURE"],
+[CV,UN,"Hydro Pump Climax","Hydro Storm + La Borra"],
+[CV,UN,"Arch Angle","Grand Cross + Heaven Sword"],
+[CV,UN,"Spirit of Light","Summon Spirit + Holy Wand"],
+[CV,UN,"Power of Lire","Soul Steal + Vicious Hunger"],
+[CV,UN,"Legacy of Death: Soul River","Dark Rift + Death Spiral"],
+[CV,UN,"Vjaya Sisters","Sword Brothers + Thunder Loop"],
+[CV,UN,"Venus Crescent","Summon Spirit Tornado + Gorgeous Moon"],
+[CV,UN,"Dark Frogamorphosis","Anura + Soul Eater"],
+[CV,UN,"Clock Tower","Endo Gears + Peri Pendulum + Myo Lift + Epi Head"],
+[CV,GI,"Alucard Shield","Alucard Swords (max) + 6 passivi + 6 evoluzioni + forziere"],
+[CV,GI,"Universitas","Vol Luminatio + Vol Umbra + forziere"],
+[ED,GL,"Dress Sword","Fleuret + Crystalline Carve","Glimmer: non spiegato come ottenerlo sul wiki."],
+[ED,GL,"Espada Ropera","Dress Sword + Shocking Rush"],
+[ED,GL,"Pursuant Blades","Splashers + Spellbinder + Dual Whirlwind"],
+[ED,GL,"Hydra Cannon","Super Missile + Ballistic Missiles"],
+[ED,GL,"Hyperion Bazooka","Hydra Cannon + Artificial Hailstorm"],
+[ED,GL,"Gekkabijin","Twin Dragon + Karoma's Mana + Gravedigger"],
+[ED,GL,"Pressure Point","Punch + Raksha"],
+[ED,GL,"Gilded Hand","Pressure Point + Shenlong Firefist"],
+[ED,GL,"Triangle Kick","Kick + Pummarola + Thunder Kick"],
+[ED,GL,"Rings of Calamity","Spirit Rings (max) + 5 passivi"],
+[ED,GL,"Hecaton Machine Gun","Saber Machine Gun + Shockwave"],
+[ED,GL,"Divergence","Hecaton Machine Gun + Bombarding Fire"],
+[ED,GL,"Pendragon","Eagle Gun + Spinach + Falconfire"],
+[ED,GL,"Lordstar","Town Sword + Swallow Slice"],
+[ED,GL,"Dayblade","Lordstar + Airwave"],
+[ED,GL,"Blood Chalice","Sanguine Star + Stone Mask + Blood Rage"],
+[ED,GL,"Jetstream","Khukuri + Parm Aegis + Moonfall Slash"],
+[ED,GL,"Falconwind","Bullova + Skull O'Maniac + Hell's Fury"],
+[ED,GL,"Feather Spear","Glaive + Divine Lancer"],
+[ED,GL,"Lohengrin","Feather Spear + Stardust"],
+[ED,GL,"Zweihander","Flamberge + Bull Crush"],
+[ED,GL,"Galatyn","Zweihander + Absetzen"],
+[ED,GL,"Emerald Wave","Emerald Rapture + Crown"],
+[AC,EV,"NaneInferno","Infernolatro (max) + Outer Saboteur"],
+[AC,EV,"Cavendish","Gros Michel (max) + Outer Saboteur"],
+[AC,EV,"Royal Flush","Fibonacci Spritz (max) + Outer Saboteur"],
+[AC,EV,"Negative Space","Celestial Booster (max) + Outer Saboteur"]
+];
+var HOW={};
+HOW[EV]="Ricetta: arma al massimo livello + passivo, poi apri un forziere di evoluzione.";
+HOW[UN]="Unione: tutte le armi al massimo livello nell'inventario, poi un forziere. Le armi si fondono in uno slot.";
+HOW[GI]="Dono: arriva in aggiunta, senza sostituire l'arma base.";
+HOW[MO]="Morph: il personaggio si trasforma al livello richiesto con la reliquia giusta, senza forziere.";
+HOW[GL]="Glimmer (Emerald Diorama): catena di potenziamenti dell'espansione.";
+var exps=[BASE,MS,BM,FO,EM,OG,CV,ED,AC],types=[EV,UN,GI,MO,GL];
+var fe={},ft={};
+function norm(s){return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")}
+function esc(s){return s.replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function chips(id,arr,st){var el=document.getElementById(id);arr.forEach(function(v){var b=document.createElement("button");b.className="chip";b.textContent=v;b.onclick=function(){st[v]=!st[v];b.classList.toggle("on");render()};el.appendChild(b)})}
+function hl(t,q){t=esc(t);if(!q)return t;var i=norm(t).indexOf(q);return i<0?t:t.slice(0,i)+"<mark>"+t.slice(i,i+q.length)+"</mark>"+t.slice(i+q.length)}
+function render(){
+ var q=norm(document.getElementById("q").value.trim());
+ var ae=exps.filter(function(x){return fe[x]}),at=types.filter(function(x){return ft[x]});
+ var out=D.filter(function(d){
+  if(ae.length&&ae.indexOf(d[0])<0)return false;
+  if(at.length&&at.indexOf(d[1])<0)return false;
+  return !q||norm(d[2]+" "+d[3]+" "+d[0]+" "+d[1]).indexOf(q)>=0});
+ document.getElementById("count").textContent=out.length+" risultati su "+D.length;
+ document.getElementById("list").innerHTML=out.map(function(d){
+  var h=HOW[d[1]]+(d[4]?" "+d[4]:"");
+  return '<div class="card"><h3>'+hl(d[2],q)+'</h3><span class="tag">'+d[1]+'</span><span class="tag">'+d[0]+'</span><div class="r"><b>Ingredienti:</b> '+hl(d[3],q)+'</div><div class="n">'+esc(h)+'</div></div>'}).join("")||'<p>Nessun risultato.</p>';
+}
+chips("fe",exps,fe);chips("ft",types,ft);
+document.getElementById("q").addEventListener("input",render);
+render();
+</script>
+</body>
+</html>

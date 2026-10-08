@@ -23,6 +23,12 @@ main{max-width:900px;margin:0 auto;padding:14px}
 .n{margin-top:4px;color:var(--mu);font-size:.82rem}
 mark{background:#f1c40f;color:#000;border-radius:3px}
 footer{text-align:center;color:var(--mu);font-size:.78rem;padding:20px}
+.card{cursor:pointer}
+.card h3::after{content:" ▾";color:var(--mu);font-size:.8rem}
+.card.open h3::after{content:" ▴"}
+.how{display:none;margin-top:8px;padding:8px 10px;background:#2a2340;border-radius:8px;font-size:.85rem;color:#ddd}
+.card.open .how{display:block}
+.how ol{margin:4px 0 6px 18px;padding:0}
 a{color:#e8a0a0}
 </style>
 </head>
@@ -211,10 +217,14 @@ HOW[MO]="Morph: il personaggio si trasforma al livello richiesto con la reliquia
 HOW[GL]="Glimmer (Emerald Diorama): catena di potenziamenti dell'espansione.";
 var exps=[BASE,MS,BM,FO,EM,OG,CV,ED,AC],types=[EV,UN,GI,MO,GL];
 var fe={},ft={};
-function norm(s){return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")}
+function norm(s){return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"")}
 function esc(s){return s.replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 function chips(id,arr,st){var el=document.getElementById(id);arr.forEach(function(v){var b=document.createElement("button");b.className="chip";b.textContent=v;b.onclick=function(){st[v]=!st[v];b.classList.toggle("on");render()};el.appendChild(b)})}
 function hl(t,q){t=esc(t);if(!q)return t;var i=norm(t).indexOf(q);return i<0?t:t.slice(0,i)+"<mark>"+t.slice(i,i+q.length)+"</mark>"+t.slice(i+q.length)}
+function steps(d){
+ var parts=d[3].split(" + "),li=parts.map(function(p){
+  return "<li>"+esc(p.replace(/\s*\(max\)/i," (al massimo livello)"))+"</li>"}).join("");
+ return '<div class="how"><b>Come si sblocca</b><ol>'+li+'</ol>'+esc(HOW[d[1]]+(d[4]?" "+d[4]:""))+'</div>'}
 function render(){
  var q=norm(document.getElementById("q").value.trim());
  var ae=exps.filter(function(x){return fe[x]}),at=types.filter(function(x){return ft[x]});
@@ -224,11 +234,15 @@ function render(){
   return !q||norm(d[2]+" "+d[3]+" "+d[0]+" "+d[1]).indexOf(q)>=0});
  document.getElementById("count").textContent=out.length+" risultati su "+D.length;
  document.getElementById("list").innerHTML=out.map(function(d){
-  var h=HOW[d[1]]+(d[4]?" "+d[4]:"");
-  return '<div class="card"><h3>'+hl(d[2],q)+'</h3><span class="tag">'+d[1]+'</span><span class="tag">'+d[0]+'</span><div class="r"><b>Ingredienti:</b> '+hl(d[3],q)+'</div><div class="n">'+esc(h)+'</div></div>'}).join("")||'<p>Nessun risultato.</p>';
+  return '<div class="card" tabindex="0"><h3>'+hl(d[2],q)+'</h3><span class="tag">'+d[1]+'</span><span class="tag">'+d[0]+'</span><div class="r"><b>Ingredienti:</b> '+hl(d[3],q)+'</div>'+steps(d)+'</div>'}).join("")||'<p>Nessun risultato.</p>';
 }
 chips("fe",exps,fe);chips("ft",types,ft);
 document.getElementById("q").addEventListener("input",render);
+document.getElementById("list").addEventListener("click",function(e){
+ if(e.target.closest("a"))return;
+ var c=e.target.closest(".card");if(c)c.classList.toggle("open")});
+document.getElementById("list").addEventListener("keydown",function(e){
+ if(e.key==="Enter"||e.key===" "){var c=e.target.closest(".card");if(c){e.preventDefault();c.classList.toggle("open")}}});
 render();
 </script>
 </body>

@@ -217,7 +217,7 @@ HOW[MO]="Morph: il personaggio si trasforma al livello richiesto con la reliquia
 HOW[GL]="Glimmer (Emerald Diorama): catena di potenziamenti dell'espansione.";
 var exps=[BASE,MS,BM,FO,EM,OG,CV,ED,AC],types=[EV,UN,GI,MO,GL];
 var fe={},ft={};
-function norm(s){return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"")}
+function norm(s){return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")}
 function esc(s){return s.replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 function chips(id,arr,st){var el=document.getElementById(id);arr.forEach(function(v){var b=document.createElement("button");b.className="chip";b.textContent=v;b.onclick=function(){st[v]=!st[v];b.classList.toggle("on");render()};el.appendChild(b)})}
 function hl(t,q){t=esc(t);if(!q)return t;var i=norm(t).indexOf(q);return i<0?t:t.slice(0,i)+"<mark>"+t.slice(i,i+q.length)+"</mark>"+t.slice(i+q.length)}

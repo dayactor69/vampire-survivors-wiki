@@ -30,6 +30,14 @@ footer{text-align:center;color:var(--mu);font-size:.78rem;padding:20px}
 .card.open .how{display:block}
 .how ol{margin:4px 0 6px 18px;padding:0}
 a{color:#e8a0a0}
+.ic{width:28px;height:28px;object-fit:contain;image-rendering:pixelated;vertical-align:middle;margin-right:6px;flex:none}
+.card h3 .ic{width:32px;height:32px}
+.ings{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin-top:6px}
+.ing{display:inline-flex;align-items:center;background:#2a2340;border-radius:8px;padding:3px 9px 3px 4px}
+.ing .ic{margin-right:5px}
+.plus{color:var(--mu)}
+.how li .ic{width:24px;height:24px;margin-right:6px}
+.how li{margin:2px 0}
 </style>
 </head>
 <body>
@@ -43,7 +51,7 @@ a{color:#e8a0a0}
 <div id="count"></div>
 <div id="list"></div>
 </main>
-<footer>Dati dal <a href="https://vampire.survivors.wiki/w/Evolution">Vampire Survivors Wiki</a>. Le icone arriveranno in seguito. Wiki non ufficiale.</footer>
+<footer>Dati dal <a href="https://vampire.survivors.wiki/w/Evolution">Vampire Survivors Wiki</a>. Icone: sprite di Vampire Survivors (&copy; Poncle) tratte dal <a href="https://vampire.survivors.wiki/">Vampire Survivors Wiki</a> (vampire.survivors.wiki), testi e immagini del wiki sotto licenza <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>. Wiki non ufficiale.</footer>
 <script>
 // [espansione, tipo, risultato, ricetta, nota]
 var BASE="Gioco base",MS="Legacy of the Moonspell",BM="Legacy of the Bloodmoon",FO="Tides of the Foscari",EM="Emergency Meeting",OG="Operation Guns",CV="Ode to Castlevania",ED="Emerald Diorama",AC="Ante Chamber";
@@ -217,13 +225,24 @@ HOW[MO]="Morph: il personaggio si trasforma al livello richiesto con la reliquia
 HOW[GL]="Glimmer (Emerald Diorama): catena di potenziamenti dell'espansione.";
 var exps=[BASE,MS,BM,FO,EM,OG,CV,ED,AC],types=[EV,UN,GI,MO,GL];
 var fe={},ft={};
+// icone disponibili in icons/ (nome file = slug del nome); se manca, il nome si vede senza icona
+var IC=("108-bocce 108-responsive-prayers acerbatus alchemy-whip alucard-shield alucard-spear alucard-swords alucart-sworb ammo-appalate anima-of-mortaccio anura arch-angle argent-flow armor arrow-of-goth ashella ashes-of-muspell atmo-torpedo attractorb aura-blast aurablaster-tip axe bfc2000-ad bi-bracelet bianca-ramba big-fuzzy-fist blacken-firmament blade-crossbow blood-chalice bloodlust bloody-tear bone boo-roo-boolle bracelet bracer bullova bwaka-knife c-u-laser candelabrador candybox cardinal-rain carnage-heart carrello carrozza cavendish celestial-booster celestial-dusting celestial-voulge centralis-custos chaos-altemanna chaos-lazulia chaos-malachite chaos-rosalia cherry-bomb claimh-solais clear-asteroids clear-debris clock-lancet clock-tower clover cocytus confodere crimson-shroud crissaegrim-tip cross cross-crasher-tip crossed-wires crown curved-knife damnation dark-frogamorphosis dark-iron-shield dark-rift darkness-illusion dayblade daybreaker-tip death-spiral descent-into-misery dextro-custos dies-irae discus diver-mines divergence dominus-agony dominus-anger dominus-hatred dragon-water-whip dress-sword duplicator dust-to-dust eagle-gun ebony-wings echo-night eight-the-sparrow emerald-rapture emerald-wave emergency-meeting empty-tome endo-gears epi-head eskizzibur espada-ropera falconwind feather-spear festive-winds fibonacci-spritz fire-l3gs fire-wand firearm fireball firefall firestall firewall flamberge flames-of-misspell flash-arrow fleuret forbidden-siren four-seasons fulgur fuwalafuwaloo galatyn gale-force garlic gatti-amari gekkabijin gemma-torpor gilded-hand glaive glass-fandango globus godai-shuffle gold-ring gorgeous-moon grand-cross gros-michel guardian-s-targe gunastrophe gungnir-souris hand-grenade heaven-sword hecaton-machine-gun hellfire hex hollow-heart holy-wand homing-miss hydra-cannon hydro-pump-climax hydro-storm hydrostormer-tip hyperion-bazooka ice-fang icebrand impostongue incineration infernolatro infinite-corridor iron-ball iron-shield j-odore javelin jet-black-whip jetstream jewel-gun just-vent kaiser-knuckle kardia-phlegeton karoma-s-mana keremet-bubbles keremet-morbus khukuri kick king-bible knife kyra-stones la-borra lapiste-tepisto laurel legacy-of-death-soul-river legionnaire lifesign-scan lightning-ring lohengrin long-gun long-inus lordstar lucky-swipe luminaire luminatio lunarbight lunarflight lunarmight lunarsight mace magic-wand mannajja mazo-familiar meal-ticket melio-confodere metaglio-left metaglio-right metal-claw mille-bolle-blu million-cut millionaire mini-crewmate mini-engineer mini-ghost mini-guardian mini-impostor mini-scientist mini-shapeshifter mirage-robe moon-rod mormegil-tip mortaccio multistage-missiles muramasa myo-lift naneinferno negative-space night-sword nightmare ninth-circle no-future o-sole-meeo ophion optical-shot outer-saboteur pako-battiliar paranormal-scan parm-aegis peachone pendragon pentagram peri-pendulum phiera-der-tuphello phieraggi platinum-whip pneuma-tempestas pocket-knife power-of-lire power-of-sire pressure-point prism-lass prismatic-missile profusione-d-amore pronto-beam prototype-a prototype-b prototype-c pummarola punch pursuant-blades raging-fire rapidus-fio refectio report rings-of-calamity road-to-heaven rock-riot rocket-science royal-flush rune-sword runetracer saber-machine-gun sacred-beasts-tower-shield salamender sanctuary sanguine-star santa-water scarlet-needle science-rocks screams-from-the-void shadow-pinion shadow-servant sharp-tongue shimmering-sands short-gun shuriken silver-revolver silver-ring silver-wind sinestro-custos skull-o-maniac sole-solution song-of-mana sonic-bloom sonic-dash sonic-whip soul-eater soul-steal spellbinder spellstream spellstrike spellstring spellstrom spinach spirit-disturbance spirit-of-light spirit-rings spirit-tornado-tip splashers spread-shot stamazza star-flail stellar-blade stone-mask summon-night summon-spirit summon-spirit-tornado super-candybox-ii-turbo super-missile svarog-statue sword-brothers tenebris-tonitrus the-rpg thousand-edge thunder-loop thunderbolt-spear time-warp tirajisu torrona-s-box town-sword tri-bracelet triangle-kick trident trinum-custodem troll-bomb twin-dragon tyrfing umbra unearthly-bolt unholy-vespers universitas unjust-ejection valkyrie-turner valmanway vampire-killer vandalier vanitas-whip vento-sacro venus-crescent vibhuti-whip vicious-hunger victory-sword vjaya-sisters vol-confodere vol-luminatio vol-umbra wave-beam weapon-power-up whip wind-whip wine-glass wings wrecking-ball yagyu-shuriken yatta-cavallo yatta-daikarin zweihander".split(" ")),ICS={};IC.forEach(function(s){ICS[s]=1});
+function slug(n){return norm(n).replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")}
+function ico(n){var f=slug(n.replace(/\s*\([^)]*\)/g,""));return ICS[f]?'<img class="ic" src="icons/'+f+'.png" alt="" width="28" height="28" loading="lazy" onerror="this.remove()">':""}
 function norm(s){return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")}
 function esc(s){return s.replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 function chips(id,arr,st){var el=document.getElementById(id);arr.forEach(function(v){var b=document.createElement("button");b.className="chip";b.textContent=v;b.onclick=function(){st[v]=!st[v];b.classList.toggle("on");render()};el.appendChild(b)})}
 function hl(t,q){t=esc(t);if(!q)return t;var i=norm(t).indexOf(q);return i<0?t:t.slice(0,i)+"<mark>"+t.slice(i,i+q.length)+"</mark>"+t.slice(i+q.length)}
+function ings(t,q){
+ var i=q?norm(t).indexOf(q):-1,o=0;
+ return '<div class="ings"><b>Ingredienti:</b>'+t.split(" + ").map(function(p,k){
+  var a=Math.max(i,o)-o,b=Math.min(i+q.length,o+p.length)-o,h=esc(p);
+  if(i>=0&&b>a)h=esc(p.slice(0,a))+"<mark>"+esc(p.slice(a,b))+"</mark>"+esc(p.slice(b));
+  var r=(k?'<span class="plus" aria-hidden="true">+</span>':"")+'<span class="ing">'+ico(p)+h+'</span>';
+  o+=p.length+3;return r}).join("")+'</div>'}
 function steps(d){
  var parts=d[3].split(" + "),li=parts.map(function(p){
-  return "<li>"+esc(p.replace(/\s*\(max\)/i," (al massimo livello)"))+"</li>"}).join("");
+  return "<li>"+ico(p)+esc(p.replace(/\s*\(max\)/i," (al massimo livello)"))+"</li>"}).join("");
  return '<div class="how"><b>Come si sblocca</b><ol>'+li+'</ol>'+esc(HOW[d[1]]+(d[4]?" "+d[4]:""))+'</div>'}
 function render(){
  var q=norm(document.getElementById("q").value.trim());
@@ -234,7 +253,7 @@ function render(){
   return !q||norm(d[2]+" "+d[3]+" "+d[0]+" "+d[1]).indexOf(q)>=0});
  document.getElementById("count").textContent=out.length+" risultati su "+D.length;
  document.getElementById("list").innerHTML=out.map(function(d){
-  return '<div class="card" tabindex="0"><h3>'+hl(d[2],q)+'</h3><span class="tag">'+d[1]+'</span><span class="tag">'+d[0]+'</span><div class="r"><b>Ingredienti:</b> '+hl(d[3],q)+'</div>'+steps(d)+'</div>'}).join("")||'<p>Nessun risultato.</p>';
+  return '<div class="card" tabindex="0"><h3>'+ico(d[2])+hl(d[2],q)+'</h3><span class="tag">'+d[1]+'</span><span class="tag">'+d[0]+'</span><div class="r">'+ings(d[3],q)+'</div>'+steps(d)+'</div>'}).join("")||'<p>Nessun risultato.</p>';
 }
 chips("fe",exps,fe);chips("ft",types,ft);
 document.getElementById("q").addEventListener("input",render);
